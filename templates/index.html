@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pacific Scholars AI Agent</title>
+    <title>Pacific Scholars Agent</title>
 </head>
 <body>
-    <h1>Pacific Scholars AI Agent</h1>
+    <h1>Scholarship Finder</h1>
     <form action="/search" method="post">
-        <input type="text" name="query" placeholder="Search scholarships, internships, jobs..." required>
+        <input type="text" name="query" placeholder="Enter University Name">
         <button type="submit">Search</button>
     </form>
 
     {% if results %}
-        <h2>Results for "{{ query }}":</h2>
+        <h2>Results for "{{ query }}"</h2>
         <ul>
-            {% for item in results %}
-                <li>{{ item }}</li>
-            {% endfor %}
+        {% for result in results %}
+            <li>
+                <a href="{{ result.link }}" target="_blank">{{ result.title }}</a>
+            </li>
+        {% endfor %}
         </ul>
     {% endif %}
 </body>
 </html>
+
