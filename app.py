@@ -1,36 +1,22 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, render_template, request
 from scraper import get_scholarships
+
+import os  # For Render PORT environment variable
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "POST"])
-def home():
-    query = ""
-    if request.method == "POST":
-        query = request.form.get("query", "").strip()
-    scholarships = get_scholarships(query)
+@app.route("/")
+def index():
+    return render_template("index.html")
 
-    html = """
-    <h2>Pacific Scholars AI Agent</h2>
-    <form method="post">
-        <input type="text" name="query" placeholder="Search scholarships, jobs, research..." value="{{query}}" style="width:400px;">
-        <button type="submit">Search</button>
-    </form>
-    <ul>
-    """
-    if scholarships:
-        for s in scholarships:
-            html += f"<li><a href='{s['link']}' target='_blank'>{s['title']}</a></li>"
-    else:
-        html += "<li>No scholarships found. Try a different keyword.</li>"
-    html += "</ul>"
-
-    return render_template_string(html, query=query)
-
-import os
+@app.route("/search", methods=["POST"])
+def search():
+    query = request.form.get("query")
+    results = get_scholarships(query)
+    return render_template("index.html", results=results, query=query)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5000))  # Use Render's assigned port
     app.run(host="0.0.0.0", port=port, debug=False)
 
 
